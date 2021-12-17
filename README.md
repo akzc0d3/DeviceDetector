@@ -3,14 +3,16 @@ A NodeJS and MongoDB application to generate links, that can be sent to target t
 
 # Steps to install:
   Edit .env configuartion for following environment variable
+  ```
   DB_URI= ...
   DB_NAME= ...
   Coll_Target= ...
   Coll_User= ...
   SECRET= ...
-
+  ```
+  ```
   npm install
-
+  ```
 # Screenshots
 Sign Up screen
 ![SignUP](https://github.com/akzc0d3/DeviceDetector/blob/main/Screenshots/signup.png)
