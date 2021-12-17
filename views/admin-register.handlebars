@@ -1,0 +1,24 @@
+<div>
+    {{#each notification.error}}
+    <div class="notification rounded mb-2 bg-danger shadow"><i class="fas fa-exclamation-circle"></i>&nbsp;{{this}}
+    </div>
+    {{/each}}
+    {{#each notification.info}}
+    <div class="notification rounded mb-2 bg-success shadow"><i class="far fa-check-circle"></i>&nbsp;{{this}}</div>
+    {{/each}}
+    </h6>
+</div>
+
+<div class="container w-25 ">
+
+    <form action="/signup" method="POST">
+
+        <h1 class="h3 mt-5 mb-3 font-weight-normal">Sign Up</h1>
+        <label for="username" class="sr-only ">Username</label>
+        <input name="username" class="form-control mb-2" placeholder="Username" required autofocus>
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+
+        <button class=" mt-5 btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+    </form>
+</div>

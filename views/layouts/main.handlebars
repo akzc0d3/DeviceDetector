@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/font-awesome/all.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Document</title>
+</head>
+
+<body class="bg-dark text-white  ">
+    {{{body}}}
+
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script>
+
+        window.onload = function () {
+            const notifications = document.querySelectorAll('.notification');
+            if (notifications) {
+                setTimeout(function () {
+                    for (let i = 0; i < notifications.length; i++) {
+                        notifications[i].style.display = 'none';
+                    }
+                }, 2000);
+            }
+
+        }
+
+
+
+        Handlebars.registerHelper("inc", function (value, options) {
+            return parseInt(value) + 1;
+        });
+        Handlebars.registerHelper("toLocalString", function (value, options) {
+            
+            const date = new Date(value);
+            return date.toString();
+        });
+    </script>
+
+</body>
+
+</html>

