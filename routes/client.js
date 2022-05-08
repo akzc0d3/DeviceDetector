@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const DeviceDetector = require('../detector');
-const { DeviceProvider, LinkProvider, TargetProvider } = require('../db');
+const { UserProvider,DeviceProvider, LinkProvider, TargetProvider } = require('../db');
+const {nodemail} = require('../helper/helper')
+const { ObjectId } = require('mongodb');
 
 
 
@@ -12,7 +14,12 @@ router.get("/l/*", async (request, response) => {
             date: new Date(),
             deviceInfo: DeviceDetector.detect(request)
         }
-        const result = await TargetProvider.findandUpdate({ data: { $elemMatch: { link: link } } }, { $push: { 'data.$.devices': device } });
+        const result = await TargetProvider.findandUpdate({data: { $elemMatch: { link: link } } }, { $push: { 'data.$.devices': device } });
+        
+        
+        const admin  = await UserProvider.get({'_id':new ObjectId(result.value.admin_id) })
+        
+        nodemail(admin,result.value)
         if (result.value) {
             result.value.data.forEach((element) => {
                 if (element.link === link) {
