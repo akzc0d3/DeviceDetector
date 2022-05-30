@@ -14,7 +14,7 @@ app.use(session({
     secret: process.env.SECRET,
     resave:false,
     saveUninitialized:false,
-    store: MongoStore.create({mongoUrl:'mongodb://' + process.env.DB_URI+'/'+process.env.DB_NAME})
+    store: MongoStore.create({mongoUrl:process.env.DB_URI+'/'+process.env.DB_NAME})
 }
 ));
 

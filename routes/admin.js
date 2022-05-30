@@ -5,9 +5,7 @@ const { TargetProvider, UserProvider, DbProvider } = require('../db');
 const router = require("express").Router();
 const bcrypt = require('bcrypt');
 const fs = require('fs')
-const path = require('path'
-
-)
+const path = require('path')
 router.route('/login').all(ifNotLoggedIn).
     get((request, response) => {
         response.render('admin-login', {
@@ -34,27 +32,24 @@ router.route('/signup').all(ifNotLoggedIn).
     post(async (request, response) => {
 
         try {
-            const userCount = await UserProvider.count();
+            
 
-            if (userCount === 0) {
+            
                 const username = request.body.username;
                 const password = request.body.password;
+                const email =  request.body.email;
 
                 bcrypt.genSalt(function (err, salt) {
                     bcrypt.hash(password, salt, async function (err, hash) {
                         if (err) {
                             console.log(error);
                         }
-                        await UserProvider.insert({ username, hash });
+                        await UserProvider.insert({ username, hash, email });
                         request.flash('info', 'User created sucessfully')
-                        response.redirect('back')
+                        response.redirect('/login')
                     });
                 });
-            } else {
-                request.flash('error', 'User already created. Please login')
-                response.redirect('back')
-
-            }
+            
         } catch (error) {
             console.log(error)
         }
@@ -62,8 +57,9 @@ router.route('/signup').all(ifNotLoggedIn).
     })
 
 router.get('/', ifLoggedIn, async (request, response) => {
-    const targets = await (await TargetProvider.aggregate([{ $match: {} }, { $project: { _id: 0, name: 1, nTrackLinks: { $size: "$data" } } }])).toArray()
+    const targets = await (await TargetProvider.aggregate([{ $match: {admin_id:request.user._id} }, { $project: { _id: 0, name: 1, nTrackLinks: { $size: "$data" } } }])).toArray()
     username = request.user.username;
+    console.log(targets);
     response.render('dashboard', {
         notification: {
             error: request.flash('error'),
@@ -93,12 +89,14 @@ router.post('/create-track-link', ifLoggedIn, body('target', 'Target field canno
 
             const newTarget = {
                 name: request.body.target,
+                admin_id:request.user._id,
                 data: [{
                     link: `${request.get('host')}/l/${request.body.targetLink}`,
                     redirect: request.body.redirectLink,
 
                 }]
             };
+                
             try {
                 const filter = { name: { $regex: new RegExp(`^${newTarget.name}$`, 'i') } }
                 const target = await TargetProvider.get(filter);
